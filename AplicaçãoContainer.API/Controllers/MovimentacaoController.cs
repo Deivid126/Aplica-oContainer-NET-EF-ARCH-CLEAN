@@ -17,9 +17,9 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult FindAll() 
+        public async Task<ActionResult<List<Movimentacao>>> FindAll() 
         {
-            var movimentacaos = _movimentacaoService.GetAllMovimentacao();
+            var movimentacaos = await _movimentacaoService.GetAllMovimentacao();
 
             return Ok(movimentacaos);
         }
@@ -38,19 +38,19 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(MovimentacaoDTO movimentacao)
+        public async Task<ActionResult<Movimentacao>> Save(MovimentacaoDTO movimentacao)
         {
-            var movisave = _movimentacaoService.Create(movimentacao);
+            var movisave = await _movimentacaoService.Create(movimentacao);
 
             return Ok(movisave);
 
         }
 
         [HttpPut]
-        public ActionResult Uptade (Movimentacao movimentacao) 
+        public async Task<ActionResult<Movimentacao>> Uptade (Movimentacao movimentacao) 
         {
 
-            var moviuptade = _movimentacaoService.Update(movimentacao);
+            var moviuptade = await _movimentacaoService.Update(movimentacao);
 
             return Ok(moviuptade);
         }

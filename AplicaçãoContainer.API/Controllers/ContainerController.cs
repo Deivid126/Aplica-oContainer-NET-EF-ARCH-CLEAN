@@ -17,9 +17,9 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult FindAllContainer() 
+        public async Task<ActionResult<List<Container>>> FindAllContainer() 
         {
-            var containers = _containerService.GetAllContainers();
+            var containers = await _containerService.GetAllContainers();
 
             return Ok(containers);
         }
@@ -27,10 +27,10 @@ namespace AplicaçãoContainer.API.Controllers
    
 
         [HttpPost]
-        public ActionResult CreateContainer(ContainerDTO container) 
+        public async Task<ActionResult<Container>> CreateContainer(ContainerDTO container) 
         {
 
-            var containercreate = _containerService.Create(container);
+            var containercreate = await _containerService.Create(container);
 
             return Ok(containercreate);
 
@@ -47,7 +47,7 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpPut]
-        public ActionResult PutContainer(Container container) 
+        public ActionResult<Container> PutContainer(Container container) 
         { 
          var containeruptade = _containerService.Update(container);
             return Ok(containeruptade);

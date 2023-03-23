@@ -12,9 +12,9 @@ namespace AplicaçãoContainer.Application.Services
 {
     public class ContainerService : IContainerService
     {
-        private readonly ContainerRepository _containerRepository;
+        private readonly IContainerRepository _containerRepository;
 
-        public ContainerService(ContainerRepository containerRepository)
+        public ContainerService(IContainerRepository containerRepository)
         {
             _containerRepository = containerRepository;
         }
