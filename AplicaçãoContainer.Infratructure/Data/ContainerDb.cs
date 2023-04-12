@@ -16,5 +16,7 @@ namespace AplicaçãoContainer.Infratructure.Data
 
         public DbSet<Container> Containers { get; set; }
         public DbSet<Movimentacao> Movimentacaos {get; set; }
+
+        public DbSet<Cliente> Clientes { get; set; }
     }
 }

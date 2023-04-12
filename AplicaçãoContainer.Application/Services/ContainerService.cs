@@ -23,7 +23,6 @@ namespace AplicaçãoContainer.Application.Services
         {
             Container containernew = new Container();
             containernew.Numero_Container = container.Numero_Container;
-            containernew.Cliente = container.Cliente;
             containernew.Categoria = container.Categoria;
             containernew.Tipo = container.Tipo;
             containernew.Status = container.Status;

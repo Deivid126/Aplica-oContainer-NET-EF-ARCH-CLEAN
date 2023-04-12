@@ -12,7 +12,8 @@ namespace AplicaçãoContainer.Core.Models
     {
         public Guid Id { get; set; }
 
-        public string Cliente { get; set; }
+        public Cliente Cliente { get; set; }
+
         [StringLength(11)]
         public string Numero_Container { get; set; }
 
