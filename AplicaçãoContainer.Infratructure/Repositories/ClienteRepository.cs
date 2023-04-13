@@ -1,4 +1,5 @@
-﻿using AplicaçãoContainer.Core.Interfaces;
+﻿using AplicaçãoContainer.Core.DTOs;
+using AplicaçãoContainer.Core.Interfaces;
 using AplicaçãoContainer.Core.Models;
 using AplicaçãoContainer.Infratructure.Data;
 using BCrypt.Net;
@@ -19,10 +20,13 @@ namespace AplicaçãoContainer.Infratructure.Repositories
         {
             _containerDb = containerDb;
         }
-        public async Task<Cliente> Create(Cliente cliente)
+        public async Task<Cliente> Create(ClienteDTO cliente)
         {
-            cliente.PasswordHash = BCrypt.Net.BCrypt.HashPassword(cliente.PasswordHash);
-            var containernew = await _containerDb.Clientes.AddAsync(cliente);
+            Cliente clientenew = new Cliente();
+            clientenew.PasswordHash = BCrypt.Net.BCrypt.HashPassword(cliente.PasswordHash);
+            clientenew.Email = cliente.Email;
+            cliente.Name = cliente.Name;
+            var containernew = await _containerDb.Clientes.AddAsync(clientenew);
             _containerDb.SaveChanges();
 
             return containernew.Entity;
@@ -67,6 +71,7 @@ namespace AplicaçãoContainer.Infratructure.Repositories
 
         public async  Task<Cliente> Update(Cliente cliente)
         {
+
             _containerDb.Clientes.Update(cliente);
             _containerDb.SaveChanges();
             var clienteupdate = await _containerDb.Clientes.FindAsync(cliente.Id);

@@ -10,7 +10,6 @@ namespace AplicaçãoContainer.Core.DTOs
 {
     public class ContainerDTO
     {
-        public string Cliente { get; set; }
         
         public string Numero_Container { get; set; }
 

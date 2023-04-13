@@ -10,13 +10,18 @@ namespace AplicaçãoContainer.Infratructure.Data
 {
     public class ContainerDb : DbContext
     {
-        public ContainerDb(DbContextOptions options) : base(options)
+        public ContainerDb(DbContextOptions<ContainerDb> options) : base(options)
         {
+           
         }
+
 
         public DbSet<Container> Containers { get; set; }
         public DbSet<Movimentacao> Movimentacaos {get; set; }
 
         public DbSet<Cliente> Clientes { get; set; }
+
+        
+
     }
 }

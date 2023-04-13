@@ -8,18 +8,19 @@ using System.Threading.Tasks;
 
 namespace AplicaçãoContainer.Core.Interfaces
 {
-    public interface IClienteRepository
+    public interface IClienteService
     {
+        AuthenticateResponse Authenticate(AuthenticateRequest authenticate);
+
+        Task<Cliente> Register(ClienteDTO cliente);
+
         Task<Cliente> FindCliente(Guid id);
 
         Task<List<Cliente>> GetAll();
 
-        Task<Cliente> FindClienteAuth(string email);
-
         void DeleteClienteAsync(Guid id);
 
-        Task<Cliente> Create(ClienteDTO cliente);
 
-        Task<Cliente> Update(Cliente cliente);
+        Task<Cliente> Update(Cliente container);
     }
 }

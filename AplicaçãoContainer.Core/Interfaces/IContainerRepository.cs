@@ -11,6 +11,7 @@ namespace AplicaçãoContainer.Core.Interfaces
     public interface IContainerRepository
     {
         Task<Container> FindContainer(Guid id);
+
         void DeleteContainerAsync(Guid id);
 
         Task<List<Container>> GetAllContainers();
