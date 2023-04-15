@@ -10,20 +10,20 @@ namespace AplicaçãoContainer.API.Controllers
     [Route("[controller]")]
     public class ClienteController : ControllerBase
     {
-        private IClienteService clienteService;
+        private IClienteService _clienteService;
 
         public ClienteController(IClienteService clienteService)
         {
-            this.clienteService = clienteService;
+            _clienteService = clienteService;
         }
 
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public IActionResult Register(ClienteDTO cliente) 
+        public async Task<ActionResult<Cliente>> Register(ClienteDTO cliente)
         {
 
-            var clinte = clienteService.Register(cliente);
+            var clinte = await _clienteService.Register(cliente);
 
             return Ok(clinte);
         
@@ -31,10 +31,10 @@ namespace AplicaçãoContainer.API.Controllers
 
         [HttpPost("autenticate")]
         [AllowAnonymous]
-        public IActionResult Autenticate(AuthenticateRequest authenticate)
+        public async Task<ActionResult<AuthenticateResponse>> Autenticate(AuthenticateRequest authenticate)
         {
 
-            var jwt = clienteService.Authenticate(authenticate);
+            var jwt = await _clienteService.Authenticate(authenticate);
 
             return Ok(jwt);
 
@@ -42,9 +42,9 @@ namespace AplicaçãoContainer.API.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Get() 
+        public async Task<ActionResult<List<Cliente>>> Get() 
         {
-            var clientes = clienteService.GetAll();
+            var clientes = await _clienteService.GetAll();
 
             return Ok(clientes);
         }

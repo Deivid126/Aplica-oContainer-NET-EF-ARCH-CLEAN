@@ -4,6 +4,7 @@ using AplicaçãoContainer.Core.Models;
 using AplicaçãoContainer.Infratructure.Data;
 using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +18,18 @@ namespace AplicaçãoContainer.Application.Services
         private readonly IClienteRepository _clienteRepository;
         private readonly ContainerDb _containerDb;
         private readonly IJwtService _jwtService;
+        private readonly IMemoryCache _memoryCache;
 
-        public ClienteService(IClienteRepository clienteRepository, ContainerDb containerDb, IJwtService jwtService)
+        public ClienteService(IClienteRepository clienteRepository, ContainerDb containerDb, 
+            IJwtService jwtService, IMemoryCache memoryCache)
         {
             _clienteRepository = clienteRepository;
             _containerDb = containerDb;
             _jwtService = jwtService;
+            _memoryCache = memoryCache;
         }
 
-        public AuthenticateResponse Authenticate(AuthenticateRequest user)
+        public  async Task<AuthenticateResponse> Authenticate(AuthenticateRequest user)
         {
             var cliente = _containerDb.Clientes.SingleOrDefault(x => x.Email == user.email);
 
@@ -34,7 +38,7 @@ namespace AplicaçãoContainer.Application.Services
                 throw new Exception("Username or password is incorrect");
             }
 
-            var jwt = _jwtService.GenerateToken(cliente);
+            var jwt = await Task.Run(() => _jwtService.GenerateToken(cliente));
 
             AuthenticateResponse jwtToken = new AuthenticateResponse();
             jwtToken.jwt = jwt;
@@ -43,36 +47,55 @@ namespace AplicaçãoContainer.Application.Services
 
         }
 
-        public void DeleteClienteAsync(Guid id)
+        public async void DeleteClienteAsync(Guid id)
         {
-            _clienteRepository.DeleteClienteAsync(id);
+            await Task.Run(() => _clienteRepository.DeleteClienteAsync(id));
         }
 
-        public Task<Cliente> FindCliente(Guid id)
+        public async Task<Cliente> FindCliente(Guid id)
         {
-            return _clienteRepository.FindCliente(id);
+            var cachedClient = await Task.Run(() => _memoryCache.GetOrCreateAsync($"cliente_{id}", entry =>
+            {
+
+                entry.SlidingExpiration = TimeSpan.FromMinutes(5);
+                entry.Priority = CacheItemPriority.High;
+
+                return  _clienteRepository.FindCliente(id);
+
+            }));
+
+            return cachedClient;
         }
 
-        public Task<List<Cliente>> GetAll()
+        public async Task<List<Cliente>> GetAll()
         {
-            return _clienteRepository.GetAll();
+            var cachedClients = await Task.Run(() => _memoryCache.GetOrCreateAsync("clientes", entry =>
+            {
+
+                entry.SlidingExpiration = TimeSpan.FromMinutes(5);
+                entry.Priority = CacheItemPriority.High;
+
+                return _clienteRepository.GetAll();
+
+            }));
+
+            return cachedClients;
         }
 
-        public Task<Cliente> Register(ClienteDTO cliente)
+        public async Task<Cliente> Register(ClienteDTO cliente)
         {
             if(_containerDb.Clientes.Any( x => x.Email == cliente.Email)) 
             { 
                 throw new Exception("Cliente já está cadastrado"); 
             }
 
-            var clientenew =  _clienteRepository.Create(cliente);
+            return await Task.Run(() => _clienteRepository.Create(cliente));
 
-            return clientenew;
         }
 
-        public Task<Cliente> Update(Cliente cliente)
+        public async Task<Cliente> Update(Cliente cliente)
         {
-            return _clienteRepository.Update(cliente);
+            return await Task.Run(() => _clienteRepository.Update(cliente));
         }
     }
 }

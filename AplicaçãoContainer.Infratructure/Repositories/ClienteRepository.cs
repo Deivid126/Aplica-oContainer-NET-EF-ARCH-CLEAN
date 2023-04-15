@@ -25,7 +25,7 @@ namespace AplicaçãoContainer.Infratructure.Repositories
             Cliente clientenew = new Cliente();
             clientenew.PasswordHash = BCrypt.Net.BCrypt.HashPassword(cliente.PasswordHash);
             clientenew.Email = cliente.Email;
-            cliente.Name = cliente.Name;
+            clientenew.Name = cliente.Name;
             var containernew = await _containerDb.Clientes.AddAsync(clientenew);
             _containerDb.SaveChanges();
 

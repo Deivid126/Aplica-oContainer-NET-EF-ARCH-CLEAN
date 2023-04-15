@@ -2,6 +2,8 @@
 using AplicaçãoContainer.Core.Interfaces;
 using AplicaçãoContainer.Core.Models;
 using AplicaçãoContainer.Infratructure.Repositories;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +15,15 @@ namespace AplicaçãoContainer.Application.Services
     public class ContainerService : IContainerService
     {
         private readonly IContainerRepository _containerRepository;
+        private readonly IMemoryCache _memoryCache;
 
-        public ContainerService(IContainerRepository containerRepository)
+        public ContainerService(IContainerRepository containerRepository, IMemoryCache memoryCache)
         {
             _containerRepository = containerRepository;
+            _memoryCache = memoryCache;
         }
 
-        public Task<Container> Create(ContainerDTO container)
+        public async Task<Container> Create(ContainerDTO container)
         {
             Container containernew = new Container();
             containernew.Numero_Container = container.Numero_Container;
@@ -27,28 +31,43 @@ namespace AplicaçãoContainer.Application.Services
             containernew.Tipo = container.Tipo;
             containernew.Status = container.Status;
 
-            return _containerRepository.Create(containernew);
+            return await Task.Run(() => _containerRepository.Create(containernew));
         }
 
-        public void DeleteContainerAsync(Guid id)
+        public async void DeleteContainerAsync(Guid id)
         {
-            _containerRepository.DeleteContainerAsync(id);
+            await Task.Run(() => _containerRepository.DeleteContainerAsync(id));
         }
 
-        public Task<Container> FindContainer(Guid id)
+        public async Task<Container> FindContainer(Guid id)
         {
-           return _containerRepository.FindContainer(id);
+            var cachedContainer = await Task.Run(() => _memoryCache.GetOrCreateAsync($"container_{id}", entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(5);
+                entry.Priority = CacheItemPriority.High;
+                return _containerRepository.FindContainer(id);
+
+            }));
+
+            return cachedContainer;
         }
 
-        public Task<List<Container>> GetAllContainers()
+        public async Task<List<Container>> GetAllContainers()
         {
-            return _containerRepository.GetAllContainers();
+            var cachedContainers = await Task.Run(() => _memoryCache.GetOrCreateAsync("containers", entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(5);
+                entry.Priority = CacheItemPriority.High;
+                return _containerRepository.GetAllContainers();
+
+            }));
+
+            return cachedContainers;
         }
 
-        public Task<Container> Update(Container container)
+        public async Task<Container> Update(Container container)
         {
-
-            return _containerRepository.Update(container);
+            return await Task.Run(() => _containerRepository.Update(container));
         }
     }
 }

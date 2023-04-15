@@ -10,7 +10,7 @@ namespace AplicaçãoContainer.Core.Interfaces
 {
     public interface IClienteService
     {
-        AuthenticateResponse Authenticate(AuthenticateRequest authenticate);
+        Task<AuthenticateResponse> Authenticate(AuthenticateRequest authenticate);
 
         Task<Cliente> Register(ClienteDTO cliente);
 

@@ -20,14 +20,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ContainerDb>(options =>
         options.UseInMemoryDatabase(databaseName: "myDatabase"));
 
-builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<IClienteService, ClienteService>();
-builder.Services.AddScoped<IContainerRepository, ContainerRepository>();
-builder.Services.AddScoped<IMovimetacaoRepository, MovimentacaoRepository>();
-builder.Services.AddScoped<IContainerService, ContainerService>();
-builder.Services.AddScoped<IMovimentacaoService, MovimentacaoService>();
+builder.Services.AddMemoryCache();
 
+MyAppServices.RegisterServices(builder.Services);
 
 builder.Services.AddAuthentication(options =>
 {
