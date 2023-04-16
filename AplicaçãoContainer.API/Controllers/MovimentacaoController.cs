@@ -1,6 +1,7 @@
 ﻿using AplicaçãoContainer.Core.DTOs;
 using AplicaçãoContainer.Core.Interfaces;
 using AplicaçãoContainer.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AplicaçãoContainer.API.Controllers
@@ -17,6 +18,7 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Movimentacao>>> FindAll() 
         {
             var movimentacaos = await _movimentacaoService.GetAllMovimentacao();
@@ -24,20 +26,31 @@ namespace AplicaçãoContainer.API.Controllers
             return Ok(movimentacaos);
         }
 
-       
+
+        [HttpGet("container")]
+        [Authorize]
+        public async Task<ActionResult<List<Movimentacao>>> FindAllMovimentacaoContainer( Guid id )
+        {
+            var movimentacaos = await _movimentacaoService.GetAllMovimentacao();
+
+            return Ok(movimentacaos);
+        }
+
 
         [HttpDelete]
+        [Authorize]
         public ActionResult Delete(Guid id) 
         
         {
 
             _movimentacaoService.DeleteMovimentacao(id);
 
-            return Ok();
+            return NoContent();
         
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Movimentacao>> Save(MovimentacaoDTO movimentacao)
         {
             var movisave = await _movimentacaoService.Create(movimentacao);
@@ -47,6 +60,7 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult<Movimentacao>> Uptade (Movimentacao movimentacao) 
         {
 

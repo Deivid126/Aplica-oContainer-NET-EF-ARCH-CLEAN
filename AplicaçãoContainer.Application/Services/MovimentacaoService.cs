@@ -36,6 +36,11 @@ namespace AplicaçãoContainer.Application.Services
            await Task.Run(() => _movimetacaoRepository.DeleteMovimentacao(id));
         }
 
+        public async Task<List<Movimentacao>> FindContainer(Guid id)
+        {
+           throw new NotFiniteNumberException();
+        }
+
         public async Task<Movimentacao> FindMovimentacao(Guid id)
         {
             var cachedMovimentacao = await Task.Run(() => _memoryCache.GetOrCreateAsync($"movimentacao_{id}", entry =>

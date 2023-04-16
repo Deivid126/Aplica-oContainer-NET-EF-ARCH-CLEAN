@@ -31,7 +31,7 @@ namespace AplicaçãoContainer.Application.Services
 
         public  async Task<AuthenticateResponse> Authenticate(AuthenticateRequest user)
         {
-            var cliente = _containerDb.Clientes.SingleOrDefault(x => x.Email == user.email);
+            var cliente = await _containerDb.Clientes.SingleOrDefaultAsync(x => x.Email == user.email);
 
             if (cliente == null || !BCrypt.Net.BCrypt.Verify(user.password, cliente.PasswordHash)) 
             {
@@ -40,8 +40,10 @@ namespace AplicaçãoContainer.Application.Services
 
             var jwt = await Task.Run(() => _jwtService.GenerateToken(cliente));
 
-            AuthenticateResponse jwtToken = new AuthenticateResponse();
-            jwtToken.jwt = jwt;
+            AuthenticateResponse jwtToken = new AuthenticateResponse
+            {
+                jwt = jwt
+            };
 
             return jwtToken;
 

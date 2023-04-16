@@ -35,6 +35,11 @@ namespace AplicaçãoContainer.Infratructure.Repositories
             }
         }
 
+        public Task<List<Movimentacao>> FindContainer(Guid id)
+        {
+           throw new NotImplementedException();
+        }
+
         public async Task<Movimentacao> FindMovimentacao(Guid id)
         {
             var container = await _containerDb.Movimentacaos.FindAsync(id);

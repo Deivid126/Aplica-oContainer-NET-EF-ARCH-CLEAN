@@ -1,6 +1,7 @@
 ﻿using AplicaçãoContainer.Core.DTOs;
 using AplicaçãoContainer.Core.Interfaces;
 using AplicaçãoContainer.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AplicaçãoContainer.API.Controllers
@@ -17,6 +18,7 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Container>>> FindAllContainer() 
         {
             var containers = await _containerService.GetAllContainers();
@@ -27,6 +29,7 @@ namespace AplicaçãoContainer.API.Controllers
    
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Container>> CreateContainer(ContainerDTO container) 
         {
 
@@ -37,6 +40,7 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         public ActionResult DeleteContainer(Guid id) 
         {
         
@@ -47,6 +51,7 @@ namespace AplicaçãoContainer.API.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public ActionResult<Container> PutContainer(Container container) 
         { 
          var containeruptade = _containerService.Update(container);

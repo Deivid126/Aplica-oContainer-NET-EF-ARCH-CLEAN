@@ -18,5 +18,7 @@ namespace AplicaçãoContainer.Core.Interfaces
         Task<Movimentacao> Create(Movimentacao movimentacao);
 
         Task<Movimentacao> Update(Movimentacao movimentacao);
+
+        Task<List<Movimentacao>> FindContainer(Guid id);
     }
 }

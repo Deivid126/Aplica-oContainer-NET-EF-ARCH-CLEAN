@@ -18,6 +18,8 @@ namespace AplicaçãoContainer.Core.Models
 
         public DateTime DataFinal { get; set;}
 
-        public ICollection<Container> Container { get; set; }
+        public ICollection<Container>? Container { get; set; }
+
+          
     }
 }

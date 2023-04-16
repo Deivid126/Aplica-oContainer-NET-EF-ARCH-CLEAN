@@ -29,7 +29,7 @@ namespace AplicaçãoContainer.API.Controllers
         
         }
 
-        [HttpPost("autenticate")]
+        [HttpPost("authenticate")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthenticateResponse>> Autenticate(AuthenticateRequest authenticate)
         {
