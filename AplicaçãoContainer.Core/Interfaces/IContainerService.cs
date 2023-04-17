@@ -15,7 +15,7 @@ namespace AplicaçãoContainer.Core.Interfaces
 
         Task<List<Container>> GetAllContainers();
 
-        Task<Container> Create(ContainerDTO container);
+        Task<Container> Create(ContainerDTO container, Guid clienteid);
 
         Task<Container> Update(Container container);
     }

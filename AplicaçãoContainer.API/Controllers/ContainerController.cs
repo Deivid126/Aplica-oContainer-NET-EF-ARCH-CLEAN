@@ -30,10 +30,10 @@ namespace AplicaçãoContainer.API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Container>> CreateContainer(ContainerDTO container) 
+        public async Task<ActionResult<Container>> CreateContainer(ContainerDTO container, Guid clienteid) 
         {
 
-            var containercreate = await _containerService.Create(container);
+            var containercreate = await _containerService.Create(container,clienteid);
 
             return Ok(containercreate);
 

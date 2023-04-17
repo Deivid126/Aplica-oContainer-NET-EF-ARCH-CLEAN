@@ -16,16 +16,19 @@ namespace AplicaçãoContainer.Application.Services
     {
         private readonly IContainerRepository _containerRepository;
         private readonly IMemoryCache _memoryCache;
+        private readonly IClienteRepository _clienteRepository;
 
-        public ContainerService(IContainerRepository containerRepository, IMemoryCache memoryCache)
+        public ContainerService(IContainerRepository containerRepository, IMemoryCache memoryCache, IClienteRepository clienteRepository)
         {
             _containerRepository = containerRepository;
             _memoryCache = memoryCache;
+            _clienteRepository = clienteRepository;
         }
 
-        public async Task<Container> Create(ContainerDTO container)
+        public async Task<Container> Create(ContainerDTO container, Guid clienteid)
         {
             Container containernew = new Container();
+            containernew.Cliente = await _clienteRepository.FindCliente(clienteid);
             containernew.Numero_Container = container.Numero_Container;
             containernew.Categoria = container.Categoria;
             containernew.Tipo = container.Tipo;
